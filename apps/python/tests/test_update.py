@@ -24,6 +24,14 @@ class UpdateManifestTests(unittest.TestCase):
         self.assertTrue(is_newer_version("0.10.0", "0.9.9"))
         self.assertFalse(is_newer_version("0.6.2", "0.6.2"))
 
+    def test_prerelease_clients_can_find_the_final_release(self) -> None:
+        versions = ["0.7.0a0", "0.7.0a1", "0.7.0b0", "0.7.0rc1", "0.7.0", "0.7.1a0"]
+        for previous, following in zip(versions, versions[1:]):
+            self.assertTrue(is_newer_version(following, previous))
+            self.assertFalse(is_newer_version(previous, following))
+        with self.assertRaises(UpdateManifestError):
+            parse_version("0.7.0a0")  # The public update feed remains stable-only.
+
     def test_manifest_rejects_untrusted_release_host(self) -> None:
         payload = """
         {
@@ -123,6 +131,7 @@ class UpdateCheckerTests(unittest.TestCase):
             summary="test",
         )
         with (
+            patch("sysu_netauth.service.update_checker.APP_VERSION", "0.6.2"),
             patch(
                 "sysu_netauth.service.update_checker.fetch_release_info",
                 return_value=release,
