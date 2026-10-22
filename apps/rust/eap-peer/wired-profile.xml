@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LANProfile xmlns="http://www.microsoft.com/networking/LAN/profile/v1">
+  <MSM>
+    <security>
+      <OneXEnforced>false</OneXEnforced>
+      <OneXEnabled>true</OneXEnabled>
+      <OneX xmlns="http://www.microsoft.com/networking/OneX/v1">
+        <cacheUserData>false</cacheUserData>
+        <authMode>machine</authMode>
+        <EAPConfig>
+          <EapHostConfig xmlns="http://www.microsoft.com/provisioning/EapHostConfig">
+            <EapMethod>
+              <Type xmlns="http://www.microsoft.com/provisioning/EapCommon">4</Type>
+              <VendorId xmlns="http://www.microsoft.com/provisioning/EapCommon">0</VendorId>
+              <VendorType xmlns="http://www.microsoft.com/provisioning/EapCommon">0</VendorType>
+              <AuthorId xmlns="http://www.microsoft.com/provisioning/EapCommon">32473</AuthorId>
+            </EapMethod>
+            <ConfigBlob>535953552D4541502D4D44352D7631</ConfigBlob>
+          </EapHostConfig>
+        </EAPConfig>
+      </OneX>
+    </security>
+  </MSM>
+</LANProfile>

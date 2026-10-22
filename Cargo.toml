@@ -1,5 +1,6 @@
 [workspace]
-members = ["apps/rust"]
+members = ["apps/rust", "apps/rust/eap-peer"]
+default-members = ["apps/rust"]
 resolver = "2"
 
 [profile.release]

@@ -95,26 +95,35 @@ pub fn answer(
     }
     match packet.kind {
         Some(1) => Ok(Some(response(source, destination, packet.id, 1, username)?)),
-        Some(4) => {
-            let Some(&len) = packet.data.first() else {
-                bail!("empty MD5 challenge");
-            };
-            ensure!(
-                len > 0 && packet.data.len() > len as usize,
-                "truncated MD5 challenge"
-            );
-            let mut hash = Md5::new();
-            hash.update([packet.id]);
-            hash.update(password);
-            hash.update(&packet.data[1..=len as usize]);
-            let mut body = Vec::with_capacity(17 + username.len());
-            body.push(16);
-            body.extend_from_slice(&hash.finalize());
-            body.extend_from_slice(username);
-            Ok(Some(response(source, destination, packet.id, 4, &body)?))
-        }
+        Some(4) => Ok(Some(response(
+            source,
+            destination,
+            packet.id,
+            4,
+            &md5_response(packet.id, packet.data, username, password)?,
+        )?)),
         _ => Ok(None),
     }
+}
+
+/// EAP-MD5 method data, shared by the Ethernet and Windows EAPHost backends.
+pub fn md5_response(id: u8, challenge: &[u8], username: &[u8], password: &[u8]) -> Result<Vec<u8>> {
+    let Some(&len) = challenge.first() else {
+        bail!("empty MD5 challenge");
+    };
+    ensure!(
+        len > 0 && challenge.len() > len as usize,
+        "truncated MD5 challenge"
+    );
+    let mut hash = Md5::new();
+    hash.update([id]);
+    hash.update(password);
+    hash.update(&challenge[1..=len as usize]);
+    let mut body = Vec::with_capacity(17 + username.len());
+    body.push(16);
+    body.extend_from_slice(&hash.finalize());
+    body.extend_from_slice(username);
+    Ok(body)
 }
 
 pub fn mac_text(mac: [u8; 6]) -> String {

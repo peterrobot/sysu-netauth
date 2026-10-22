@@ -521,6 +521,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "sysu-netauth-eap-peer"
+version = "0.7.0"
+dependencies = [
+ "anyhow",
+ "serde",
+ "serde_json",
+ "sysu-netauth",
+ "windows-sys 0.61.2",
+]
+
+[[package]]
 name = "typenum"
 version = "1.20.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
